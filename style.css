@@ -1,0 +1,96 @@
+/* style.css */
+
+/*
+  Este arquivo CSS contém estilos personalizados que complementam o Tailwind CSS.
+  Ele é usado para definir cores específicas, fontes e ajustes finos que podem não
+  estar diretamente disponíveis nas classes utilitárias do Tailwind ou para
+  organizar estilos mais complexos.
+*/
+
+/* Importa a fonte Inter do Google Fonts para garantir que ela seja carregada */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Regras CSS globais */
+body {
+    font-family: 'Inter', sans-serif; /* Define a fonte Inter para todo o corpo */
+    margin: 0; /* Remove margem padrão do body */
+    padding: 0; /* Remove padding padrão do body */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura/altura */
+}
+
+/* Estilos para containers, garantindo alinhamento central e padding lateral */
+.container {
+    max-width: 1200px; /* Largura máxima do container */
+    margin-left: auto; /* Centraliza o container */
+    margin-right: auto; /* Centraliza o container */
+    padding-left: 1rem; /* Padding lateral padrão */
+    padding-right: 1rem; /* Padding lateral padrão */
+}
+
+/* Ajustes responsivos para o padding lateral do container em telas maiores */
+@media (min-width: 768px) {
+    .container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Estilos específicos para a barra de navegação superior, se necessário */
+header {
+    /* O Tailwind já aplica muitas classes aqui, mas você pode adicionar mais */
+    /* Exemplo: border-bottom: 1px solid #e0e0e0; */
+}
+
+/* Estilos para botões gerais, como os de CTA */
+.main-button {
+    display: inline-block; /* Permite aplicar padding e margem */
+    /* Cores e padding são definidos no HTML com classes Tailwind ou inline <style> */
+    /* Exemplo: transition: background-color 0.3s ease; */
+}
+
+/* Estilos para seções com fundo escuro, como depoimentos ou o segundo hero */
+.dark-bg-section {
+    /* Cor de fundo e cor do texto são definidos no HTML com classes Tailwind ou inline <style> */
+}
+
+/* Estilos para os cards dentro das seções de recursos/serviços */
+.feature-card {
+    /* Background, bordas e sombra são definidos no HTML */
+    /* Exemplo: background-color: white; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+/* Estilos para os campos de input e textarea do formulário de contato */
+.contact-input {
+    /* Cores, bordas e padding são definidos no HTML */
+    /* Exemplo: width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 0.25rem; */
+}
+
+/* Estilos para o botão de enviar do formulário de contato */
+.contact-submit-button {
+    /* Cores e padding são definidos no HTML */
+    /* Exemplo: background-color: #4CAF50; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; */
+}
+
+/* Estilos para os cards de depoimentos */
+.testimonial-card {
+    /* Background, bordas e sombra são definidos no HTML */
+    /* Exemplo: background-color: #3B663F; border-radius: 0.75rem; padding: 2rem; */
+}
+
+/*
+  Para elementos de imagem, o `object-fit: cover;` pode ser útil
+  para garantir que as imagens preencham seus contêineres sem distorção,
+  cortando-as se necessário.
+*/
+img {
+    max-width: 100%; /* Garante que imagens não excedam a largura do seu contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    object-fit: cover; /* Recorta a imagem para cobrir a área, se necessário */
+}
+
+/*
+  A responsividade é gerenciada principalmente pelo Tailwind CSS usando
+  prefixos como `sm:`, `md:`, `lg:`. Não há necessidade de muitas media queries
+  manuais aqui, a menos que haja um estilo muito específico e complexo
+  que o Tailwind não cubra diretamente.
+*/

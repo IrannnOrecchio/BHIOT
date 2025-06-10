@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioGrid - Transformação Urbana com IoT</title>
+    <!-- Inclui o Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Link para o seu arquivo de estilo personalizado -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Define a fonte Inter como padrão para todo o corpo do documento */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos personalizados para o botão de contato no cabeçalho */
+        .header-contact-button {
+            background-color: #55B55A; /* Um tom de verde para o botão */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Bordas bem arredondadas */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .header-contact-button:hover {
+            background-color: #4CAF50; /* Um verde um pouco mais escuro ao passar o mouse */
+        }
+        /* Estilos para os botões principais das seções */
+        .main-button {
+            background-color: #55B55A;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem; /* Bordas arredondadas */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .main-button:hover {
+            background-color: #4CAF50;
+        }
+        /* Estilos para seções de fundo escuro */
+        .dark-bg-section {
+            background-color: #2E5030; /* Verde escuro */
+            color: white;
+        }
+        /* Estilos para a seção de contato */
+        .contact-form-bg {
+            background-color: #2E5030; /* Verde escuro */
+        }
+        .contact-input {
+            background-color: #3B663F; /* Um verde ligeiramente mais claro para os campos do formulário */
+            border: none;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem; /* Bordas arredondadas */
+            width: 100%;
+        }
+        .contact-input::placeholder {
+            color: #A0A0A0; /* Cor do placeholder */
+        }
+        .contact-submit-button {
+            background-color: #55B55A;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .contact-submit-button:hover {
+            background-color: #4CAF50;
+        }
+        /* Estilos para os cards de depoimentos */
+        .testimonial-card {
+            background-color: #3B663F; /* Verde ligeiramente mais claro */
+            border-radius: 0.75rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="text-2xl font-bold text-gray-800">BioGrid</div>
+            <!-- Navegação -->
+            <nav class="flex items-center space-x-6">
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 font-semibold">Home</a>
+                <a href="data.html" class="text-gray-600 hover:text-gray-900 font-semibold">Dados IoT</a>
+            </nav>
+            <!-- Botão de Contato no Cabeçalho -->
+            <a href="#contact" class="header-contact-button">
+                Contact us
+            </a>
+            <!-- Ícones de visualização e publicação (apenas visuais, não funcionais) -->
+            <div class="md:flex hidden items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Seção Hero 1 -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
+                        Transforme Belo Horizonte com <span class="text-green-600">IoT</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-600">
+                        Revolucione Belo Horizonte através da alta tecnologia IoT, promovendo cidades mais inteligentes e sustentáveis para um futuro inovador.
+                    </p>
+                </div>
+                <div class="md:w-1/2 flex justify-center md:justify-end">
+                    <!-- Imagem da cidade com sobreposição digital -->
+                    <img src="https://placehold.co/600x400/2E5030/FFFFFF?text=Cidade+IoT"
+                         alt="Cidade com tecnologia IoT"
+                         class="rounded-lg shadow-lg w-full md:w-3/4 lg:w-2/3"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/2E5030/FFFFFF?text=Imagem+Carregando'">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Hero 2 (Fundo escuro) -->
+        <section class="py-16 md:py-24 dark-bg-section">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                        Inove a Gestão Urbana <span class="text-green-400">IoT</span>
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-200 mb-8">
+                        Transforme a gestão urbana com soluções inovadoras de IoT, aprimorando a conectividade e eficiência em Belo Horizonte, MG, Brasil.
+                    </p>
+                    <a href="#" class="main-button inline-block">
+                        Explore Soluções IoT
+                    </a>
+                </div>
+                <div class="md:w-1/2 flex justify-center md:justify-end">
+                    <!-- Imagem de turbinas eólicas e edifícios modernos -->
+                    <img src="https://placehold.co/600x400/3B663F/FFFFFF?text=Energia+Renovavel"
+                         alt="Turbinas eólicas e edifícios modernos"
+                         class="rounded-lg shadow-lg w-full md:w-3/4 lg:w-2/3"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/3B663F/FFFFFF?text=Imagem+Carregando'">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Recursos/Serviços -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-16">
+                    Inovações Tecnológicas Urbanas
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Card 1: Monitoramento Inteligente de Energia -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
+                        <img src="https://placehold.co/400x250/F0F0F0/2E5030?text=Energia+Inteligente"
+                             alt="Monitoramento de Energia Inteligente"
+                             class="rounded-lg mb-6 w-full h-auto"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x250/F0F0F0/2E5030?text=Imagem+Carregando'">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Monitoramento Inteligente de Energia</h3>
+                        <p class="text-gray-600">
+                            Otimize o consumo energético com uma tecnologia IoT para uma gestão sustentável e eficiente.
+                        </p>
+                    </div>
+                    <!-- Card 2: Gerenciamento de Tráfego Urbano -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
+                        <img src="https://placehold.co/400x250/F0F0F0/2E5030?text=Trafego+Urbano"
+                             alt="Gerenciamento de Tráfego Urbano"
+                             class="rounded-lg mb-6 w-full h-auto"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x250/F0F0F0/2E5030?text=Imagem+Carregando'">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Gerenciamento de Tráfego Urbano</h3>
+                        <p class="text-gray-600">
+                            Melhore o fluxo de tráfego com dados em tempo real para uma cidade mais fluida e segura.
+                        </p>
+                    </div>
+                    <!-- Card 3: Sistemas de Iluminação Inteligentes -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center">
+                        <img src="https://placehold.co/400x250/F0F0F0/2E5030?text=Iluminacao+Inteligente"
+                             alt="Sistemas de Iluminação Inteligentes"
+                             class="rounded-lg mb-6 w-full h-auto"
+                             onerror="this.onerror=null; this.src='https://placehold.co/400x250/F0F0F0/2E5030?text=Imagem+Carregando'">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Sistemas de Iluminação Inteligentes</h3>
+                        <p class="text-gray-600">
+                            Reduza custos e melhore a segurança pública com nosso sistema de iluminação automatizado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Chamada para Ação (CTA) -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                    <p class="text-lg font-bold text-green-600 mb-4">Transformação Urbana</p>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
+                        Inove com IoT em Belo Horizonte.
+                    </h2>
+                    <p class="text-lg md:text-xl text-gray-600 mb-8">
+                        Conecte-se ao futuro com soluções inovadoras em IoT, transformando Belo Horizonte em uma cidade inteligente e sustentável.
+                    </p>
+                    <a href="#" class="main-button inline-block">
+                        Saiba Mais Agora
+                    </a>
+                </div>
+                <div class="md:w-1/2 flex justify-center md:justify-end">
+                    <!-- Imagem de edifícios com sobreposição IoT -->
+                    <img src="https://placehold.co/600x400/F0F0F0/2E5030?text=Transformacao+IoT"
+                         alt="Edifícios com sobreposição tecnológica IoT"
+                         class="rounded-lg shadow-lg w-full md:w-3/4 lg:w-2/3"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/F0F0F0/2E5030?text=Imagem+Carregando'">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Especialistas -->
+        <section class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0 text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
+                        Especialistas em Transformação Urbana
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        No coração de Belo Horizonte, MG, nosso time da BioGrid está empenhado em transformar cidades em ambientes mais inteligentes e sustentáveis. Com especialistas em IoT, nossa equipe combina inovação tecnológica com um profundo compromisso ambiental, desenvolvendo soluções que melhoram a vida urbana de maneira responsável e eficiente.
+                    </p>
+                    <p class="text-lg text-gray-600">
+                        Unidos por uma visão comum de futuro, nossos profissionais trabalham em colaboração estreita, garantindo que cada projeto só atenda às necessidades tecnológicas, mas também promova o bem-estar da comunidade.
+                    </p>
+                </div>
+                <div class="md:w-1/2 flex justify-center md:justify-end">
+                    <!-- Imagem de cityscape com sobreposição de rede -->
+                    <img src="https://placehold.co/600x400/F0F0F0/2E5030?text=Especialistas"
+                         alt="Cidade com rede digital"
+                         class="rounded-lg shadow-lg w-full md:w-3/4 lg:w-2/3"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/F0F0F0/2E5030?text=Imagem+Carregando'">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Depoimentos (Fundo escuro) -->
+        <section class="py-16 md:py-24 dark-bg-section">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-16">
+                    O que nossos clientes dizem
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <!-- Depoimento 1 -->
+                    <div class="testimonial-card">
+                        <p class="text-xl text-gray-200 mb-6">
+                            "A BioGrid transformou nossa cidade em um exemplo de eficiência e inovação. A tecnologia IoT implementada trouxe melhoria significativa na infraestrutura urbana, tornando Belo Horizonte mais sustentável e conectada. Recomendo fortemente o projeto para outras cidades!"
+                        </p>
+                        <p class="text-lg font-semibold text-green-400">- Mariana Silva</p>
+                    </div>
+                    <!-- Depoimento 2 -->
+                    <div class="testimonial-card">
+                        <p class="text-xl text-gray-200 mb-6">
+                            "BioGrid revolucionou nossa infraestrutura urbana. As implementações melhoraram a eficiência energética em Belo Horizonte. É incrível ver como a tecnologia pode transformar uma cidade em um lugar mais inteligente e sustentável."
+                        </p>
+                        <p class="text-lg font-semibold text-green-400">- Carlos Mendes</p>
+                    </div>
+                </div>
+                <!-- Setas de navegação de depoimentos (apenas visuais) -->
+                <div class="mt-12 flex justify-center space-x-6">
+                    <button class="text-white hover:text-green-400 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <button class="text-white hover:text-green-400 transition">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Contato -->
+        <section id="contact" class="py-16 md:py-24 contact-form-bg">
+            <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center md:justify-start">
+                    <!-- Imagem da estação meteorológica/sensor -->
+                    <img src="https://placehold.co/600x400/3B663F/FFFFFF?text=Estacao+Meteorologica"
+                         alt="Estação meteorológica ou sensor"
+                         class="rounded-lg shadow-lg w-full md:w-3/4 lg:w-2/3"
+                         onerror="this.onerror=null; this.src='https://placehold.co/600x400/3B663F/FFFFFF?text=Imagem+Carregando'">
+                </div>
+                <div class="md:w-1/2 text-white text-center md:text-left">
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Entre em Contato Conosco</h2>
+                    <p class="text-lg md:text-xl mb-8">
+                        Conecte-se com BioGrid em Belo Horizonte para saber mais sobre nossos projetos de IoT para cidades inteligentes.
+                    </p>
+                    <form class="space-y-6">
+                        <div>
+                            <input type="text" id="name" name="name" placeholder="Nome" class="contact-input" required>
+                        </div>
+                        <div>
+                            <input type="email" id="email" name="email" placeholder="E-mail" class="contact-input" required>
+                        </div>
+                        <div>
+                            <textarea id="message" name="message" rows="5" placeholder="Mensagem" class="contact-input resize-y" required></textarea>
+                        </div>
+                        <button type="submit" class="contact-submit-button">
+                            Enviar Mensagem
+                        </button>
+                    </form>
+                    <p class="text-sm text-gray-400 mt-6">
+                        Este site é protegido pelo reCAPTCHA e pelo Google <a href="#" class="underline hover:text-green-400">Privacidade</a> e <a href="#" class="underline hover:text-green-400">Termos de serviço</a>.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 BioGrid. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Link para o seu arquivo JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

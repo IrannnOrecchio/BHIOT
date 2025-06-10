@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioGrid - Dados IoT</title>
+    <!-- Inclui o Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Link para o seu arquivo de estilo personalizado -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Inclui a biblioteca D3.js para criação de gráficos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        /* Define a fonte Inter como padrão para todo o corpo do documento */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos personalizados para o botão de contato no cabeçalho */
+        .header-contact-button {
+            background-color: #55B55A; /* Um tom de verde para o botão */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Bordas bem arredondadas */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .header-contact-button:hover {
+            background-color: #4CAF50; /* Um verde um pouco mais escuro ao passar o mouse */
+        }
+        /* Estilos para seções de fundo escuro */
+        .dark-bg-section {
+            background-color: #2E5030; /* Verde escuro */
+            color: white;
+        }
+        /* Estilos para cards de métricas */
+        .metric-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        /* Estilos para os contêineres dos gráficos SVG */
+        .chart-container {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%; /* Garante que o contêiner se ajuste à largura */
+            height: 400px; /* Altura fixa para os gráficos */
+            overflow: hidden; /* Esconde qualquer transbordamento do SVG */
+        }
+        /* Estilos específicos para o SVG dentro do chart-container */
+        .chart-container svg {
+            max-width: 100%;
+            height: auto;
+            display: block; /* Remove espaço extra abaixo do SVG */
+        }
+        /* Estilos para o tooltip do D3.js */
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            width: auto;
+            height: auto;
+            padding: 8px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Cabeçalho -->
+    <header class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="text-2xl font-bold text-gray-800">BioGrid</div>
+            <!-- Navegação -->
+            <nav class="flex items-center space-x-6">
+                <a href="index.html" class="text-gray-600 hover:text-gray-900 font-semibold">Home</a>
+                <a href="data.html" class="text-gray-600 hover:text-gray-900 font-semibold">Dados IoT</a>
+            </nav>
+            <!-- Botão de Contato no Cabeçalho -->
+            <a href="#contact" class="header-contact-button">
+                Contact us
+            </a>
+            <!-- Ícones de visualização e publicação (apenas visuais, não funcionais) -->
+            <div class="md:flex hidden items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                </button>
+                <button class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="py-16 md:py-24 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-12">
+                Monitoramento de Dados IoT em Tempo Real
+            </h1>
+
+            <!-- Filtro de Dispositivo -->
+            <div class="mb-12 text-center">
+                <label for="deviceFilter" class="block text-xl font-semibold text-gray-700 mb-4">Selecione o Dispositivo:</label>
+                <select id="deviceFilter" class="p-3 border border-gray-300 rounded-lg shadow-sm text-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <option value="Clima Praça Liberdade">Sensor de Clima (Praça Liberdade)</option>
+                    <option value="Iluminação Afonso Pena">Ponto de Iluminação (Av. Afonso Pena)</option>
+                    <option value="Tráfego Santa Tereza">Sensor de Tráfego (Viaduto Santa Tereza)</option>
+                    <option value="Qualidade Ar Centro">Estação Qualidade do Ar (Centro)</option>
+                    <option value="Lixeira Parque">Lixeira Inteligente (Parque Municipal)</option>
+                </select>
+            </div>
+
+            <!-- Seção de Métricas Chave -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <div class="metric-card">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">Temperatura Média</h3>
+                    <p id="avgTemp" class="text-5xl font-extrabold text-green-600">--</p>
+                    <p class="text-gray-500 text-sm">Últimas 24h</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">Umidade do Ar</h3>
+                    <p id="humidity" class="text-5xl font-extrabold text-blue-600">--</p>
+                    <p class="text-gray-500 text-sm">Sensor principal</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">Qualidade do Ar</h3>
+                    <p id="airQuality" class="text-5xl font-extrabold text-yellow-600">--</p>
+                    <p class="text-gray-500 text-sm">Nível de Partículas</p>
+                </div>
+                <div class="metric-card">
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">Consumo de Energia</h3>
+                    <p id="energyConsumption" class="text-5xl font-extrabold text-red-600">--</p>
+                    <p class="text-gray-500 text-sm">Hoje (total)</p>
+                </div>
+            </section>
+
+            <!-- Seção de Gráficos -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Gráfico de Linha: Tendência de Temperatura Diária -->
+                <div class="chart-container">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Tendência de Temperatura Diária</h3>
+                    <svg id="temperatureChart"></svg>
+                    <p id="noTempDataMessage" class="hidden text-gray-500">Dados de temperatura não disponíveis para este dispositivo.</p>
+                </div>
+
+                <!-- Gráfico de Barras: Consumo de Energia por Componente -->
+                <div class="chart-container">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Consumo de Energia por Componente</h3>
+                    <svg id="energyChart"></svg>
+                    <p id="noEnergyDataMessage" class="hidden text-gray-500">Dados de energia não disponíveis para este dispositivo.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2025 BioGrid. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dados fictícios abrangentes para todos os dispositivos
+        // Cada dispositivo pode ter diferentes tipos de dados (temperatura, energia, umidade, etc.)
+        const allDeviceData = {
+            "Clima Praça Liberdade": {
+                metrics: {
+                    avgTemp: { value: 24.5, unit: "°C" },
+                    humidity: { value: 68, unit: "%" },
+                    airQuality: { value: "Boa", detail: "15 µg/m³" },
+                    energyConsumption: { value: 5, unit: "kWh" } // Baixo consumo
+                },
+                temperatureTrend: [
+                    { hour: "00h", temp: 22 }, { hour: "01h", temp: 21.8 }, { hour: "02h", temp: 21.5 },
+                    { hour: "03h", temp: 21.3 }, { hour: "04h", temp: 21.1 }, { hour: "05h", temp: 21 },
+                    { hour: "06h", temp: 21.2 }, { hour: "07h", temp: 21.9 }, { hour: "08h", temp: 22.5 },
+                    { hour: "09h", temp: 23.1 }, { hour: "10h", temp: 23.8 }, { hour: "11h", temp: 24.2 },
+                    { hour: "12h", temp: 24.8 }, { hour: "13h", temp: 25.1 }, { hour: "14h", temp: 25.3 },
+                    { hour: "15h", temp: 25.2 }, { hour: "16h", temp: 24.9 }, { hour: "17h", temp: 24.5 },
+                    { hour: "18h", temp: 24 }, { hour: "19h", temp: 23.5 }, { hour: "20h", temp: 23 },
+                    { hour: "21h", temp: 22.7 }, { hour: "22h", temp: 22.4 }, { hour: "23h", temp: 22.1 }
+                ],
+                energyBreakdown: [
+                    { component: "Sensor", consumption: 3 },
+                    { component: "Comunicação", consumption: 2 }
+                ]
+            },
+            "Iluminação Afonso Pena": {
+                metrics: {
+                    avgTemp: { value: "N/A" }, // Não se aplica
+                    humidity: { value: "N/A" },
+                    airQuality: { value: "N/A" },
+                    energyConsumption: { value: 85, unit: "kWh" } // Alto consumo para iluminação
+                },
+                temperatureTrend: [], // Não tem dados de temperatura
+                energyBreakdown: [
+                    { component: "LEDs", consumption: 70 },
+                    { component: "Controlador", consumption: 10 },
+                    { component: "Módulo WiFi", consumption: 5 }
+                ]
+            },
+            "Tráfego Santa Tereza": {
+                metrics: {
+                    avgTemp: { value: 23.1, unit: "°C" },
+                    humidity: { value: 72, unit: "%" },
+                    airQuality: { value: "Moderada", detail: "30 µg/m³" },
+                    energyConsumption: { value: 28, unit: "kWh" }
+                },
+                temperatureTrend: [
+                    { hour: "00h", temp: 21 }, { hour: "01h", temp: 20.8 }, { hour: "02h", temp: 20.5 },
+                    { hour: "03h", temp: 20.3 }, { hour: "04h", temp: 20.1 }, { hour: "05h", temp: 20 },
+                    { hour: "06h", temp: 20.2 }, { hour: "07h", temp: 20.9 }, { hour: "08h", temp: 21.5 },
+                    { hour: "09h", temp: 22.1 }, { hour: "10h", temp: 22.8 }, { hour: "11h", temp: 23.2 },
+                    { hour: "12h", temp: 23.8 }, { hour: "13h", temp: 24.1 }, { hour: "14h", temp: 24.3 },
+                    { hour: "15h", temp: 24.2 }, { hour: "16h", temp: 23.9 }, { hour: "17h", temp: 23.5 },
+                    { hour: "18h", temp: 23 }, { hour: "19h", temp: 22.5 }, { hour: "20h", temp: 22 },
+                    { hour: "21h", temp: 21.7 }, { hour: "22h", temp: 21.4 }, { hour: "23h", temp: 21.1 }
+                ],
+                energyBreakdown: [
+                    { component: "Sensores de Veículos", consumption: 15 },
+                    { component: "Processamento", consumption: 10 },
+                    { component: "Comunicação", consumption: 3 }
+                ]
+            },
+            "Qualidade Ar Centro": {
+                metrics: {
+                    avgTemp: { value: 25.0, unit: "°C" },
+                    humidity: { value: 65, unit: "%" },
+                    airQuality: { value: "Crítica", detail: "80 µg/m³" }, // Nível alto de partículas
+                    energyConsumption: { value: 18, unit: "kWh" }
+                },
+                temperatureTrend: [
+                    { hour: "00h", temp: 23 }, { hour: "01h", temp: 22.8 }, { hour: "02h", temp: 22.5 },
+                    { hour: "03h", temp: 22.3 }, { hour: "04h", temp: 22.1 }, { hour: "05h", temp: 22 },
+                    { hour: "06h", temp: 22.2 }, { hour: "07h", temp: 22.9 }, { hour: "08h", temp: 23.5 },
+                    { hour: "09h", temp: 24.1 }, { hour: "10h", temp: 24.8 }, { hour: "11h", temp: 25.2 },
+                    { hour: "12h", temp: 25.8 }, { hour: "13h", temp: 26.1 }, { hour: "14h", temp: 26.3 },
+                    { hour: "15h", temp: 26.2 }, { hour: "16h", temp: 25.9 }, { hour: "17h", temp: 25.5 },
+                    { hour: "18h", temp: 25 }, { hour: "19h", temp: 24.5 }, { hour: "20h", temp: 24 },
+                    { hour: "21h", temp: 23.7 }, { hour: "22h", temp: 23.4 }, { hour: "23h", temp: 23.1 }
+                ],
+                energyBreakdown: [
+                    { component: "Sensores Gases", consumption: 8 },
+                    { component: "Bomba de Ar", consumption: 7 },
+                    { component: "Comunicação", consumption: 3 }
+                ]
+            },
+            "Lixeira Parque": {
+                metrics: {
+                    avgTemp: { value: 21.0, unit: "°C" },
+                    humidity: { value: 75, unit: "%" },
+                    airQuality: { value: "Boa", detail: "10 µg/m³" },
+                    energyConsumption: { value: 7, unit: "kWh" } // Baixo consumo para lixeira
+                },
+                temperatureTrend: [
+                    { hour: "00h", temp: 19 }, { hour: "01h", temp: 18.8 }, { hour: "02h", temp: 18.5 },
+                    { hour: "03h", temp: 18.3 }, { hour: "04h", temp: 18.1 }, { hour: "05h", temp: 18 },
+                    { hour: "06h", temp: 18.2 }, { hour: "07h", temp: 18.9 }, { hour: "08h", temp: 19.5 },
+                    { hour: "09h", temp: 20.1 }, { hour: "10h", temp: 20.8 }, { hour: "11h", temp: 21.2 },
+                    { hour: "12h", temp: 21.8 }, { hour: "13h", temp: 22.1 }, { hour: "14h", temp: 22.3 },
+                    { hour: "15h", temp: 22.2 }, { hour: "16h", temp: 21.9 }, { hour: "17h", temp: 21.5 },
+                    { hour: "18h", temp: 21 }, { hour: "19h", temp: 20.5 }, { hour: "20h", temp: 20 },
+                    { hour: "21h", temp: 19.7 }, { hour: "22h", temp: 19.4 }, { hour: "23h", temp: 19.1 }
+                ],
+                energyBreakdown: [
+                    { component: "Sensor Nível", consumption: 2 },
+                    { component: "Compactador", consumption: 4 },
+                    { component: "GPS/Comunicação", consumption: 1 }
+                ]
+            }
+        };
+
+        // Função para atualizar as métricas chave
+        function updateMetrics(deviceData) {
+            document.getElementById('avgTemp').textContent = `${deviceData.metrics.avgTemp.value}${deviceData.metrics.avgTemp.unit || ''}`;
+            document.getElementById('humidity').textContent = `${deviceData.metrics.humidity.value}${deviceData.metrics.humidity.unit || ''}`;
+            document.getElementById('airQuality').textContent = `${deviceData.metrics.airQuality.value} ${deviceData.metrics.airQuality.detail || ''}`;
+            document.getElementById('energyConsumption').textContent = `${deviceData.metrics.energyConsumption.value}${deviceData.metrics.energyConsumption.unit || ''}`;
+        }
+
+        // Função para criar o gráfico de linha de temperatura
+        function createTemperatureChart(data) {
+            const chartSvg = d3.select("#temperatureChart");
+            const noDataMessage = d3.select("#noTempDataMessage");
+
+            // Limpa o SVG existente
+            chartSvg.selectAll("*").remove();
+            if (data.length === 0) {
+                chartSvg.style("display", "none");
+                noDataMessage.style("display", "block");
+                return;
+            } else {
+                chartSvg.style("display", "block");
+                noDataMessage.style("display", "none");
+            }
+
+            const container = chartSvg.node().parentElement;
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight - 60; // Ajuste para o título
+
+            const margin = { top: 20, right: 30, bottom: 60, left: 50 };
+            const width = containerWidth - margin.left - margin.right;
+            const height = containerHeight - margin.top - margin.bottom;
+
+            const svg = chartSvg
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Escala X
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.hour))
+                .range([0, width])
+                .padding(0.1);
+
+            // Escala Y
+            const y = d3.scaleLinear()
+                .domain([d3.min(data, d => d.temp) - 1, d3.max(data, d => d.temp) + 1])
+                .range([height, 0]);
+
+            // Eixo X
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            // Eixo Y
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            // Linha do gráfico
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "#55B55A")
+                .attr("stroke-width", 3)
+                .attr("d", d3.line()
+                    .x(d => x(d.hour) + x.bandwidth() / 2)
+                    .y(d => y(d.temp))
+                );
+
+            // Adiciona círculos nos pontos de dados
+            svg.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", d => x(d.hour) + x.bandwidth() / 2)
+                .attr("cy", d => y(d.temp))
+                .attr("r", 5)
+                .attr("fill", "#55B55A")
+                .attr("stroke", "white")
+                .attr("stroke-width", 2);
+
+            // Tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip");
+
+            svg.selectAll("circle")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Hora: ${d.hour}<br/>Temp: ${d.temp}°C`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        }
+
+        // Função para criar o gráfico de barras de consumo de energia
+        function createEnergyChart(data) {
+            const chartSvg = d3.select("#energyChart");
+            const noDataMessage = d3.select("#noEnergyDataMessage");
+
+            // Limpa o SVG existente
+            chartSvg.selectAll("*").remove();
+            if (data.length === 0) {
+                chartSvg.style("display", "none");
+                noDataMessage.style("display", "block");
+                return;
+            } else {
+                chartSvg.style("display", "block");
+                noDataMessage.style("display", "none");
+            }
+
+            const container = chartSvg.node().parentElement;
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight - 60; // Ajuste para o título
+
+            const margin = { top: 20, right: 30, bottom: 100, left: 50 };
+            const width = containerWidth - margin.left - margin.right;
+            const height = containerHeight - margin.top - margin.bottom;
+
+            const svg = chartSvg
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Escala X
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.component))
+                .range([0, width])
+                .padding(0.2);
+
+            // Escala Y
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.consumption) + 10])
+                .range([height, 0]);
+
+            // Eixo X
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end");
+
+            // Eixo Y
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            // Barras do gráfico
+            svg.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.component))
+                .attr("y", d => y(d.consumption))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.consumption))
+                .attr("fill", "#55B55A");
+
+            // Tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip");
+
+            svg.selectAll(".bar")
+                .on("mouseover", function(event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`Componente: ${d.component}<br/>Consumo: ${d.consumption} kWh`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+        }
+
+        // Função principal para atualizar o dashboard
+        function updateDashboard() {
+            const selectedDeviceName = document.getElementById('deviceFilter').value;
+            const deviceData = allDeviceData[selectedDeviceName];
+
+            if (deviceData) {
+                updateMetrics(deviceData);
+                createTemperatureChart(deviceData.temperatureTrend || []);
+                createEnergyChart(deviceData.energyBreakdown || []);
+            } else {
+                // Limpar ou mostrar mensagens de erro se nenhum dado for encontrado
+                document.getElementById('avgTemp').textContent = "--";
+                document.getElementById('humidity').textContent = "--";
+                document.getElementById('airQuality').textContent = "--";
+                document.getElementById('energyConsumption').textContent = "--";
+                createTemperatureChart([]); // Limpa o gráfico de temperatura
+                createEnergyChart([]);     // Limpa o gráfico de energia
+            }
+        }
+
+        // Adiciona o listener para o filtro de dispositivo
+        document.getElementById('deviceFilter').addEventListener('change', updateDashboard);
+
+        // Redesenha os gráficos ao redimensionar a janela
+        window.addEventListener('resize', updateDashboard);
+
+        // Desenha os gráficos e métricas iniciais quando a página é carregada
+        document.addEventListener('DOMContentLoaded', updateDashboard);
+    </script>
+</body>
+</html>
